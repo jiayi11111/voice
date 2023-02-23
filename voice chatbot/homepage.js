@@ -19,12 +19,10 @@ let botvoice=new p5.Speech();
 
 let size;
 let newred;
-
 let sorry;
-
 let rectHeight = 400;
 
-// let rectWidth = min(textWidth(answer), 500);
+
 function preload(){
    
     imagetop = loadImage('memain.gif');
@@ -43,8 +41,7 @@ function setup(){
     botvoice.setPitch(1.4);
     botvoice.speak("Hi, I'm ChatBot Assistant. Ask me anything about Jiayi!");
 
-    //  botvoice.speak(myRec.resultString);
-   
+
     inputfield = createInput("");
     inputfield.style("width", "450px");
     inputfield.style("height", "45px");
@@ -67,13 +64,12 @@ mic = new p5.AudioIn();
     speakbutton.style("background-image", "url('speakicon.png')");
     speakbutton.style("border", "none");
     speakbutton.style("background-size", "cover");
-    // mic = new p5.AudioIn();
-    // mic.start();
-    
-    speakbutton.mousePressed(changeImage);
-    // sentbutton.style("background-color", "white");
+
+     speakbutton.mousePressed(mouseispressed);
+     speakbutton.mouseReleased(mouseReleased);
+     
   
-    // sentbutton.mousePressed(answerme);
+
     sentbutton.mousePressed(answerme);
    
     
@@ -82,19 +78,7 @@ mic = new p5.AudioIn();
 
 }
 
-// function question(){
-//     if(inputfield.value()!="" && sentbutton.mousePressed()){
-//         fill(0,47,167);
-//         ellipse(1350, 220,70, 70);
-//         // text(answer, 895, 225);
-//         fill(255);
-//         rect(850, 200,420, 50,27);
-    
-//         fill(0);
-//         textSize(15);
-//         text(inputfield.value(), 895, 225);
-//         }
-//     }
+
 
 
 function answerme(){
@@ -109,7 +93,7 @@ function answerme(){
             
 
             let img=createImg(data.brain[i].url);
-            img.position(width/1.7+20, 460);
+            img.position(width/1.7+20, 540);
             img.size(155,125);
             // fill(255);
             // rect(800, 350,70, 70,27);
@@ -130,25 +114,37 @@ function answerme(){
 }
 
 
-function changeImage(){
+function mouseispressed(){
   mic.start();
   myRec.start();
   myRec.onResult=showResult;
   listening=true;
-  myRec.onEnd=function recEnd(){
-    listening=false;
-    myRec.onResult = answerme;
+//   myRec.onEnd=function recEnd(){
+//     listening=false;
+//     myRec.onResult = answerme;
 
+// }
 }
-}
+
+
 
 function showResult(){
     console.log(myRec.resultString);
     inputfield.value(myRec.resultString);
 
-//   createP(myRec.resultString);
 
 
+
+  }
+
+  function mouseReleased(){
+    mic.stop();
+    myRec.stop();
+    myRec.onEnd=function recEnd(){
+      listening=false;
+      myRec.onResult = answerme;
+  
+  }
   }
 
 function draw(){
@@ -156,39 +152,31 @@ function draw(){
     
     image(imagetop, width/2+20, 50, 90, 80);
     fill(255);
-    rect(width/1.7, 50,470, 60,27);
+    rect(width/1.7, 50,470, 190,27);
     fill(0);
     textSize(15);
     text("Hi, I'm ChatBot Assistant. Ask me anything about Jiayi!", width/1.65, 85);
-  
-   
-//  if(sentbutton.mousePressed()){
-//     fill(0,47,167);
-//             ellipse(1350, 220,70, 70);
-//             // text(answer, 895, 225);
-//             fill(255);
-//             rect(850, 200,420, 50,27);
-        
-//             fill(0);
-//             textSize(15);
-//             text(inputfield.value(), 895, 225);
-       
-//  }
+    textSize(13);
+    text("1.name", width/1.65, 115);
+    text("2.School, Grade, Major", width/1.65, 135);
+    text("3.Work experience", width/1.65, 155);
+    text("4.Skills", width/1.65, 175);
+    text("5.Portfolio", width/1.65, 195);
 
 
-//After press the sent button the text of answer and inputfield.value will show up on the screen
+
 if(inputfield.value()!="" ){
 
   let rectx=(width-inputfield.value().length)/1.25;
     fill(255);
-  rect(rectx-(inputfield.value().length *5), 200,inputfield.value().length * 6+120, 55,27);
+  rect(rectx-(inputfield.value().length *5), 300,inputfield.value().length * 6+120, 55,27);
     fill(0);
     textSize(15);
     
-    text(inputfield.value(), rectx-(inputfield.value().length *4)+5, 230);
+    text(inputfield.value(), rectx-(inputfield.value().length *4)+5, 330);
  
     fill(0,47,167);        
- ellipse(1350, 220,60, 60);
+ ellipse(1350, 320,60, 60);
 
   
 
@@ -200,36 +188,29 @@ if(inputfield.value()!="" ){
 
     if(answer!=""){
 
-    image(speakRec, 750, 330,98, 85);
+    image(speakRec, 750, 400,98, 85);
    
    
   // rect(width/1.7, 330,textWidth(answer)+40, 55,27);
- image(speakRec, 750, 460,98, 85);
+ image(speakRec, 750, 520,98, 85);
   //  let rectWidth = min(textWidth(answer), 500);
   // let rectWidth = textWidth(answer)*1.5;
  
- drawTextInRectangle(answer, width/1.7+20, 330,rectHeight, 55);
+ drawTextInRectangle(answer, width/1.7+20, 420,rectHeight, 55);
     }
     if(answer==data.catchall[0]){
-      image(sorry, 875, 460,100, 100);
+      image(sorry, 875, 540,155,125);
     }
 
     if(answer==data.catchall[1]){
-      image(sorry, 875, 460,100, 100);
+      image(sorry, 875, 540,155,125);
     }
 
     if(answer==data.catchall[2]){
-      image(sorry, 875, 460,100, 100);
+      image(sorry, 875, 540,155,125);
     }
   
    
-
-
-
-
-//     fill(0);
-// textSize(15);
-//     text(answer, width/1.7+20, 350);
 
   
 
@@ -237,8 +218,7 @@ if(inputfield.value()!="" ){
      if(listening == true){
       micLevel = mic.getLevel();
       console.log(micLevel);
-        // image(speakimage,width/2+67, 650,80, 80);
-        //  let radius = map(micLevel, 0, 1, 0, 200);
+ 
         size = map( micLevel, 0, 1, 0, 1000 );
   ellipseMode(CENTER);
   
@@ -247,14 +227,7 @@ if(inputfield.value()!="" ){
   
   fill( newred, 220, 220 );
   ellipse(speakbutton.x + 10,speakbutton.y -50,size*1.2,size*1.2);
-        // fill(255);
-        // noStroke();
-       
-        // ellipse(
-        //   speakbutton.x + 10,
-        //   speakbutton.y -50,
-        // radius*1.4
-        // );
+   
        
         fill(255);
         text("I'm listening",width/2+60,700);
@@ -263,16 +236,10 @@ if(inputfield.value()!="" ){
         
       }else{
         fill(255);
-        text("Click to speak",width/2+60,700);
+        text("Pressed to speak",width/2+60,700);
        
       }
-
-
-         
-    
-
-
-
+ 
 
 
 }
@@ -344,7 +311,7 @@ function drawTextInRectangle(answer, x, y, rectWidth, rectHeight) {
     }
 
     fill(0);
-    textSize(0);
+    textSize(15);
     text(words + ' ', xPos + 10, yPos + 30);
     xPos += wordWidth;
   
@@ -361,6 +328,18 @@ function drawTextInRectangle(answer, x, y, rectWidth, rectHeight) {
   }
   
 }
+
+
+
+//1. could not recognize the mic level
+//2. could not make the answer text wrap if the text is longer than the rectangle
+
+
+
+
+
+
+
 
 
 
