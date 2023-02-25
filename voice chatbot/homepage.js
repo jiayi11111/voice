@@ -1,3 +1,15 @@
+
+
+
+
+
+
+
+
+
+
+
+
  let data;
 let answer = "";
 let mic;
@@ -19,10 +31,12 @@ let botvoice=new p5.Speech();
 
 let size;
 let newred;
+
 let sorry;
+
 let rectHeight = 400;
 
-
+// let rectWidth = min(textWidth(answer), 500);
 function preload(){
    
     imagetop = loadImage('memain.gif');
@@ -41,7 +55,8 @@ function setup(){
     botvoice.setPitch(1.4);
     botvoice.speak("Hi, I'm ChatBot Assistant. Ask me anything about Jiayi!");
 
-
+    //  botvoice.speak(myRec.resultString);
+   
     inputfield = createInput("");
     inputfield.style("width", "450px");
     inputfield.style("height", "45px");
@@ -52,7 +67,8 @@ function setup(){
     sentbutton.position(width - 125, 730);
    sentbutton.elt.style.borderRadius = "25px";
   sentbutton.style("background-color", "white");
-//   sentbutton.mousePressed(answerme);
+  sentbutton.mousePressed(showResult);
+//  sentbutton.mousePressed(answerme);
 mic = new p5.AudioIn();
     mic.start();
     size = 0;
@@ -64,58 +80,81 @@ mic = new p5.AudioIn();
     speakbutton.style("background-image", "url('speakicon.png')");
     speakbutton.style("border", "none");
     speakbutton.style("background-size", "cover");
-
-     speakbutton.mousePressed(mouseispressed);
-     speakbutton.mouseReleased(mouseReleased);
-     
-  
-
-    sentbutton.mousePressed(answerme);
-   
+    // mic = new p5.AudioIn();
+    // mic.start();
     
-   
+    // speakbutton.mousePressed(changeImage);
+     speakbutton.mousePressed(mouseispressed);
+     speakbutton.mouseReleased(answerme);
+     
 
+
+    // sentbutton.mousePressed(answerme)；
 
 }
 
-
+// function question(){
+//     if(inputfield.value()!="" && sentbutton.mousePressed()){
+//         fill(0,47,167);
+//         ellipse(1350, 220,70, 70);
+//         // text(answer, 895, 225);
+//         fill(255);
+//         rect(850, 200,420, 50,27);
+    
+//         fill(0);
+//         textSize(15);
+//         text(inputfield.value(), 895, 225);
+//         }
+//     }
 
 
 function answerme(){
-    let question = inputfield.value();
-   question = question.toLowerCase();
-    loop1: for (let i = 0; i < data.brain.length; i++) {
-    loop2: for (let j = 0; j < data.brain[i].triggers.length; j++) {
-          if (question.indexOf(data.brain[i].triggers[j]) !== -1) {
+  
+  mic.stop();
+  myRec.stop();
+  myRec.onEnd=function recEnd(){
+    listening=false;
+    myRec.onResult = showResult;
+
+
+}
+  //   let question = inputfield.value();
+  //  question = question.toLowerCase();
+  //   loop1: for (let i = 0; i < data.brain.length; i++) {
+  //   loop2: for (let j = 0; j < data.brain[i].triggers.length; j++) {
+  //         if (question.indexOf(data.brain[i].triggers[j]) !== -1) {
           
-            answer = random(data.brain[i].responses);
-           //show speakRec.gif when the answer is shown
+  //           answer = random(data.brain[i].responses);
+           
             
 
-            let img=createImg(data.brain[i].url);
-            img.position(width/1.7+20, 540);
-            img.size(155,125);
-            // fill(255);
-            // rect(800, 350,70, 70,27);
-            // rect(750, 350,120, 70,27);
-            // text(answer, 755, 350);
+  //           let img=createImg(data.brain[i].url);
+  //           img.position(width/1.7+20, 540);
+  //           img.size(155,125);
+  //           // fill(255);
+  //           // rect(800, 350,70, 70,27);
+  //           // rect(750, 350,120, 70,27);
+  //           // text(answer, 755, 350);
            
     
-            break loop1;
-          } else {
-            answer = random(data.catchall);
+  //           break loop1;
+  //         } else {
+  //           answer = random(data.catchall);
             
-          }
-        }
-      }
-      myRec.stop();
-      botvoice.speak(answer);
+  //         }
+  //       }
+  //     }
+    
+  //     botvoice.speak(answer);
       
 }
 
 
 function mouseispressed(){
   mic.start();
+  if (getAudioContext().state !== "running") {
+    getAudioContext().resume();
+  }
   myRec.start();
   myRec.onResult=showResult;
   listening=true;
@@ -129,23 +168,54 @@ function mouseispressed(){
 
 
 function showResult(){
-    console.log(myRec.resultString);
-    inputfield.value(myRec.resultString);
+    // console.log(myRec.resultString);
+    // inputfield.value(myRec.resultString);
+     inputfield.value(myRec.resultString);
+    let question = inputfield.value();
+    question = question.toLowerCase();
+     loop1: for (let i = 0; i < data.brain.length; i++) {
+     loop2: for (let j = 0; j < data.brain[i].triggers.length; j++) {
+           if (question.indexOf(data.brain[i].triggers[j]) !== -1) {
+           
+             answer = random(data.brain[i].responses);
+            
+             
+ 
+             let img=createImg(data.brain[i].url);
+             img.position(width/1.7+20, 540);
+             img.size(155,125);
+             // fill(255);
+             // rect(800, 350,70, 70,27);
+             // rect(750, 350,120, 70,27);
+             // text(answer, 755, 350);
+            
+            
+             break loop1;
+           } else {
+             answer = random(data.catchall);
+             
+           }
+         }
+       }
+     
+       botvoice.speak(answer);
 
-
+//   createP(myRec.resultString);
 
 
   }
 
-  function mouseReleased(){
-    mic.stop();
-    myRec.stop();
-    myRec.onEnd=function recEnd(){
-      listening=false;
-      myRec.onResult = answerme;
+  // function mouseover(){
+  //   mic.stop();
+  //   myRec.stop();
+  //   myRec.onEnd=function recEnd(){
+  //     listening=false;
+  //     myRec.onResult = answerme;
+
+     
   
-  }
-  }
+  // }
+  // }
 
 function draw(){
     background(0);
@@ -163,8 +233,25 @@ function draw(){
     text("4.Skills", width/1.65, 175);
     text("5.Portfolio", width/1.65, 195);
 
+ 
+
+  
+   
+//  if(sentbutton.mousePressed()){
+//     fill(0,47,167);
+//             ellipse(1350, 220,70, 70);
+//             // text(answer, 895, 225);
+//             fill(255);
+//             rect(850, 200,420, 50,27);
+        
+//             fill(0);
+//             textSize(15);
+//             text(inputfield.value(), 895, 225);
+       
+//  }
 
 
+//After press the sent button the text of answer and inputfield.value will show up on the screen
 if(inputfield.value()!="" ){
 
   let rectx=(width-inputfield.value().length)/1.25;
@@ -176,9 +263,8 @@ if(inputfield.value()!="" ){
     text(inputfield.value(), rectx-(inputfield.value().length *4)+5, 330);
  
     fill(0,47,167);        
- ellipse(1350, 320,60, 60);
+ ellipse(width/1.07, 320,60, 60);
 
-  
 
    
 
@@ -188,29 +274,36 @@ if(inputfield.value()!="" ){
 
     if(answer!=""){
 
-    image(speakRec, 750, 400,98, 85);
+    image(speakRec, width/2+20, 400,98, 85);
    
    
   // rect(width/1.7, 330,textWidth(answer)+40, 55,27);
- image(speakRec, 750, 520,98, 85);
+ image(speakRec, width/2+20, 520,98, 85);
   //  let rectWidth = min(textWidth(answer), 500);
   // let rectWidth = textWidth(answer)*1.5;
  
  drawTextInRectangle(answer, width/1.7+20, 420,rectHeight, 55);
     }
     if(answer==data.catchall[0]){
-      image(sorry, 875, 540,155,125);
+      image(sorry, width/1.7+20, 540,155,125);
     }
 
     if(answer==data.catchall[1]){
-      image(sorry, 875, 540,155,125);
+      image(sorry, width/1.7+20, 540,155,125);
     }
 
     if(answer==data.catchall[2]){
-      image(sorry, 875, 540,155,125);
+      image(sorry, width/1.7+20, 540,155,125);
     }
   
    
+
+
+
+
+//     fill(0);
+// textSize(15);
+//     text(answer, width/1.7+20, 350);
 
   
 
@@ -218,16 +311,24 @@ if(inputfield.value()!="" ){
      if(listening == true){
       micLevel = mic.getLevel();
       console.log(micLevel);
- 
+        // image(speakimage,width/2+67, 650,80, 80);
+        //  let radius = map(micLevel, 0, 1, 0, 200);
         size = map( micLevel, 0, 1, 0, 1000 );
-  ellipseMode(CENTER);
+     ellipseMode(CENTER);
   
   newred = map( micLevel, 0, 1, 0, 400 );
 
   
   fill( newred, 220, 220 );
   ellipse(speakbutton.x + 10,speakbutton.y -50,size*1.2,size*1.2);
-   
+        // fill(255);
+        // noStroke();
+       
+        // ellipse(
+        //   speakbutton.x + 10,
+        //   speakbutton.y -50,
+        // radius*1.4
+        // );
        
         fill(255);
         text("I'm listening",width/2+60,700);
@@ -239,7 +340,13 @@ if(inputfield.value()!="" ){
         text("Pressed to speak",width/2+60,700);
        
       }
- 
+
+
+         
+    
+
+
+
 
 
 }
@@ -258,7 +365,7 @@ function drawTextInRectangle(answer, x, y, rectWidth, rectHeight) {
   rect(x, y, rectWidth, rectHeight,27);
 
 
-  let words = answer.split(/[;]/);
+  let words = answer.split(' ');
  
   
 
@@ -307,12 +414,12 @@ function drawTextInRectangle(answer, x, y, rectWidth, rectHeight) {
       yPos += lineHeight;
       rectHeight += lineHeight;
       fill(255);
-      rect(x, y, rectWidth, rectHeight, 27);
+      rect(x, y, rectWidth, rectHeight+10, 27);
     }
 
     fill(0);
     textSize(15);
-    text(words + ' ', xPos + 10, yPos + 30);
+    text(word + ' ', xPos + 10, yPos+20,rectWidth-20,rectHeight-20);
     xPos += wordWidth;
   
    
@@ -335,15 +442,11 @@ function drawTextInRectangle(answer, x, y, rectWidth, rectHeight) {
 //2. could not make the answer text wrap if the text is longer than the rectangle
 
 
-
-
-
-
-
-
-
-
-
+// function googleTranslateElementInit() {
+//   new google.translate.TranslateElement({
+//       pageLanguages: 'en',
+//   }, 'google_translate_element');
+// }
 
 
 
